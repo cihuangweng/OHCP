@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农业病虫害智能问答助手</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+<main class="app-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="/assets/leaf-diagnosis.svg" alt="" class="brand-mark">
+            <div>
+                <h1>病虫害问答助手</h1>
+                <p>本地 RAG 知识库</p>
+            </div>
+        </div>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h2>知识库</h2>
+                <span id="knowledgeCount">加载中</span>
+            </div>
+            <div class="knowledge-filter">
+                <button class="filter active" data-filter="全部">全部</button>
+                <button class="filter" data-filter="粮食作物">粮食</button>
+                <button class="filter" data-filter="经济作物">经济</button>
+                <button class="filter" data-filter="蔬菜作物">蔬菜</button>
+                <button class="filter" data-filter="果树作物">果树</button>
+            </div>
+            <div id="knowledgeList" class="knowledge-list"></div>
+        </section>
+
+        <section class="panel history-panel">
+            <div class="panel-head">
+                <h2>历史记录</h2>
+                <button id="clearHistory" class="icon-button" title="清空历史" aria-label="清空历史">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="historyList" class="history-list empty">暂无历史</div>
+        </section>
+    </aside>
+
+    <section class="workspace">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">农业病虫害智能问答助手</p>
+                <h2>描述症状或直接询问防治方案</h2>
+            </div>
+            <div class="status">
+                <span class="status-dot"></span>
+                Java 本地服务
+            </div>
+        </header>
+
+        <div class="quick-prompts" aria-label="快捷问题">
+            <button data-question="水稻叶片有梭形灰白病斑，穗颈发黑，可能是什么病？">水稻梭形病斑</button>
+            <button data-question="番茄叶背有白霉，茎秆黑褐腐烂，怎么防治？">番茄晚疫病</button>
+            <button data-question="玉米心叶有排孔并且茎秆被钻蛀，应该怎么办？">玉米钻蛀</button>
+            <button data-question="黄瓜叶片多角形黄斑，叶背灰紫色霉层，用什么药？">黄瓜霜霉</button>
+        </div>
+
+        <section id="chat" class="chat" aria-live="polite"></section>
+
+        <form id="questionForm" class="composer">
+            <textarea id="questionInput" rows="3" placeholder="例如：辣椒果实出现凹陷圆斑和橙红色孢子堆，是什么病？怎么防治？"></textarea>
+            <div class="composer-actions">
+                <span id="sessionLabel">会话初始化中</span>
+                <button type="submit" id="sendButton">发送</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<template id="messageTemplate">
+    <article class="message">
+        <div class="message-role"></div>
+        <div class="message-content"></div>
+    </article>
+</template>
+
+<script src="/assets/app.js"></script>
+</body>
+</html>

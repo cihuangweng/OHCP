@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农业病虫害智能问答助手项目讲解</title>
+    <style>
+        :root {
+            --bg: #f5f7f2;
+            --paper: #ffffff;
+            --ink: #1f2b24;
+            --muted: #617067;
+            --line: #d8e0d5;
+            --green: #2f7d58;
+            --green-dark: #1f5d42;
+            --orange: #c86b3d;
+            --yellow: #f0c15b;
+            --soft-green: #eaf4ee;
+            --soft-orange: #fff4eb;
+            --shadow: 0 18px 45px rgba(36, 57, 44, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            line-height: 1.75;
+        }
+
+        a {
+            color: var(--green-dark);
+        }
+
+        .page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 56px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+            gap: 28px;
+            align-items: stretch;
+            margin-bottom: 22px;
+        }
+
+        .hero-main,
+        .hero-side,
+        .section,
+        .card,
+        .module,
+        .endpoint {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-main {
+            padding: 34px;
+            min-height: 360px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            color: var(--green-dark);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            line-height: 1.25;
+        }
+
+        h1 {
+            max-width: 760px;
+            font-size: clamp(34px, 5vw, 58px);
+            letter-spacing: 0;
+        }
+
+        .subtitle {
+            max-width: 760px;
+            margin: 18px 0 0;
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .tag {
+            padding: 7px 12px;
+            border-radius: 6px;
+            background: var(--soft-green);
+            color: var(--green-dark);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .hero-side {
+            padding: 24px;
+            display: grid;
+            align-content: space-between;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .mark {
+            width: 140px;
+            height: 140px;
+            border-radius: 22px;
+            background: var(--soft-green);
+            display: grid;
+            place-items: center;
+        }
+
+        .mark svg {
+            width: 104px;
+            height: 104px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fbfcf8;
+        }
+
+        .metric strong {
+            display: block;
+            color: var(--green-dark);
+            font-size: 26px;
+            line-height: 1.1;
+        }
+
+        .metric span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .section {
+            margin-top: 22px;
+            padding: 26px;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .section h2 {
+            font-size: 26px;
+        }
+
+        .section-lead {
+            max-width: 720px;
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+            display: grid;
+            gap: 14px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .card {
+            box-shadow: none;
+            padding: 18px;
+        }
+
+        .card h3,
+        .module h3,
+        .endpoint h3 {
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .card p,
+        .module p,
+        .endpoint p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .architecture {
+            display: grid;
+            grid-template-columns: 1fr 56px 1fr 56px 1fr;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .arch-node {
+            min-height: 148px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fbfcf8;
+        }
+
+        .arch-node strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--green-dark);
+            font-size: 18px;
+        }
+
+        .arch-node span {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .arrow {
+            text-align: center;
+            color: var(--orange);
+            font-size: 34px;
+            font-weight: 700;
+        }
+
+        .flow {
+            counter-reset: step;
+            display: grid;
+            gap: 12px;
+        }
+
+        .flow-step {
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr);
+            gap: 14px;
+            align-items: flex-start;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fbfcf8;
+        }
+
+        .flow-step::before {
+            counter-increment: step;
+            content: counter(step);
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--green);
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .flow-step strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .flow-step span {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .module {
+            box-shadow: none;
+            padding: 18px;
+            min-height: 154px;
+        }
+
+        .module code,
+        .endpoint code,
+        .path code,
+        .run-box code {
+            padding: 2px 6px;
+            border-radius: 5px;
+            background: #eef4ea;
+            color: var(--green-dark);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+            background: #fff;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        th {
+            background: #eef4ea;
+            color: var(--green-dark);
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .endpoint {
+            box-shadow: none;
+            padding: 16px;
+        }
+
+        .method {
+            display: inline-block;
+            min-width: 58px;
+            margin-right: 8px;
+            padding: 2px 7px;
+            border-radius: 5px;
+            background: var(--soft-orange);
+            color: #8a4727;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .demo-box {
+            padding: 18px;
+            border-radius: 8px;
+            background: #1f2b24;
+            color: #f7fbf8;
+            overflow: auto;
+        }
+
+        .demo-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .run-box {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: center;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fbfcf8;
+        }
+
+        .run-box p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .highlight {
+            border-left: 5px solid var(--orange);
+            background: var(--soft-orange);
+        }
+
+        .footer {
+            margin-top: 24px;
+            padding: 18px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 940px) {
+            .hero,
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .architecture {
+                grid-template-columns: 1fr;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .run-box {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            .page {
+                width: 100%;
+                padding: 0;
+            }
+
+            .hero-main,
+            .hero-side,
+            .section,
+            .card,
+            .module,
+            .endpoint {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <section class="hero-main">
+            <div>
+                <p class="eyebrow">Java 技术栈 · 本地 RAG · 农业智能问答</p>
+                <h1>农业病虫害智能问答助手项目讲解</h1>
+                <p class="subtitle">
+                    本项目根据赛题 PDF 要求实现，面向农户和农技咨询场景，提供病虫害知识检索、症状辅助识别、防治方案生成、来源展示和历史记录能力。
+                </p>
+            </div>
+            <div class="hero-tags">
+                <span class="tag">Java 21</span>
+                <span class="tag">Maven</span>
+                <span class="tag">HttpServer</span>
+                <span class="tag">本地知识库</span>
+                <span class="tag">RAG 检索增强</span>
+                <span class="tag">Web 问答界面</span>
+            </div>
+        </section>
+
+        <aside class="hero-side">
+            <div class="mark" aria-hidden="true">
+                <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="8" width="104" height="104" rx="22" fill="#eaf4ee"/>
+                    <path d="M27 72c11-38 41-50 70-49-2 27-17 56-55 65-11 2-18-5-15-16z" fill="#2f7d58"/>
+                    <path d="M38 77c15-19 32-31 50-43" fill="none" stroke="#f8fcf9" stroke-width="5" stroke-linecap="round"/>
+                    <circle cx="43" cy="50" r="6" fill="#c86b3d"/>
+                    <circle cx="60" cy="40" r="4.5" fill="#f0c15b"/>
+                    <circle cx="68" cy="64" r="5" fill="#f0c15b"/>
+                    <path d="M76 80l16 16m-3-29a17 17 0 1 1-24 24 17 17 0 0 1 24-24z" fill="none" stroke="#1f2b24" stroke-width="6" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="metric-grid">
+                <div class="metric">
+                    <strong>19</strong>
+                    <span>知识库条目</span>
+                </div>
+                <div class="metric">
+                    <strong>4</strong>
+                    <span>作物类别</span>
+                </div>
+                <div class="metric">
+                    <strong>13</strong>
+                    <span>知识字段</span>
+                </div>
+                <div class="metric">
+                    <strong>5</strong>
+                    <span>核心接口</span>
+                </div>
+            </div>
+        </aside>
+    </header>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>一、项目背景与目标</h2>
+                <p class="section-lead">
+                    传统病虫害咨询依赖人工经验，响应慢、覆盖有限。本项目用本地知识库和 RAG 思路，将专业农业知识转化为可交互的问答系统。
+                </p>
+            </div>
+        </div>
+        <div class="grid-3">
+            <article class="card">
+                <h3>解决问题</h3>
+                <p>农户描述作物异常后，系统快速给出可能病虫害、判断依据和防治方向。</p>
+            </article>
+            <article class="card">
+                <h3>核心目标</h3>
+                <p>构建一个能实际运行的农业病虫害智能问答系统，覆盖识别、防治、来源和历史记录。</p>
+            </article>
+            <article class="card">
+                <h3>实现原则</h3>
+                <p>无需外部大模型即可演示核心 RAG 流程，便于离线运行、答辩展示和后续扩展。</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>二、系统总体架构</h2>
+                <p class="section-lead">
+                    系统采用前后端一体的 Java Web 应用，前端负责问答交互，后端负责知识库加载、问题解析、检索排序、回答生成和历史管理。
+                </p>
+            </div>
+        </div>
+        <div class="architecture">
+            <div class="arch-node">
+                <strong>Web 前端</strong>
+                <span>问题输入、快捷样例、知识库筛选、来源卡片、历史回放。</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="arch-node">
+                <strong>Java 后端服务</strong>
+                <span>JDK HttpServer 提供 API，使用虚拟线程处理请求。</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="arch-node">
+                <strong>本地知识库</strong>
+                <span>TSV 文件保存病虫害名称、症状、规律、传播、防治和预防信息。</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>三、RAG 问答流程</h2>
+                <p class="section-lead">
+                    项目实现的是轻量级本地 RAG：先检索相关知识，再基于检索结果生成回答，并把引用来源返回给前端。
+                </p>
+            </div>
+        </div>
+        <div class="flow">
+            <div class="flow-step">
+                <div>
+                    <strong>用户自然语言提问</strong>
+                    <span>例如“水稻叶片有梭形灰白病斑，穗颈发黑，可能是什么病？”</span>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div>
+                    <strong>问题解析与意图识别</strong>
+                    <span>识别“症状识别、防治咨询、发生规律、预防建议、综合问答”等意图。</span>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div>
+                    <strong>关键词和症状召回</strong>
+                    <span>提取作物、病虫害名称、别名、症状词和防治词，并在知识库中加权匹配。</span>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div>
+                    <strong>Top-K 来源排序</strong>
+                    <span>按名称、别名、作物、症状、防治字段综合打分，选出最相关条目。</span>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div>
+                    <strong>生成结构化回答</strong>
+                    <span>输出判断依据、发生规律、传播途径、农业防治、化学防治、生物防治和预防建议。</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>四、核心模块说明</h2>
+                <p class="section-lead">项目按职责拆分为 api、domain、repository、service、util 五类模块，结构清晰，便于维护。</p>
+            </div>
+        </div>
+        <div class="grid-3">
+            <article class="module">
+                <h3>启动入口</h3>
+                <p><code>AgroQaApplication</code> 初始化知识库、问答服务、历史服务和 HTTP 服务。</p>
+            </article>
+            <article class="module">
+                <h3>接口层</h3>
+                <p><code>AgroQaServer</code> 提供聊天、历史、知识库和静态页面访问。</p>
+            </article>
+            <article class="module">
+                <h3>领域模型</h3>
+                <p><code>PestKnowledge</code>、<code>QaResponse</code>、<code>SearchHit</code> 表达核心业务数据。</p>
+            </article>
+            <article class="module">
+                <h3>知识库仓储</h3>
+                <p><code>PestKnowledgeRepository</code> 从 TSV 文件加载并校验病虫害知识。</p>
+            </article>
+            <article class="module">
+                <h3>检索服务</h3>
+                <p><code>KnowledgeSearchService</code> 完成关键词召回、权重计算和 Top-K 排序。</p>
+            </article>
+            <article class="module">
+                <h3>问答服务</h3>
+                <p><code>PestQaService</code> 组织答案、追问建议、无法回答提示和多轮上下文。</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>五、知识库设计</h2>
+                <p class="section-lead">
+                    知识库覆盖粮食作物、经济作物、蔬菜作物、果树作物，每条病虫害都包含赛题要求的核心字段。
+                </p>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>类别</th>
+                    <th>覆盖示例</th>
+                    <th>知识字段</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>粮食作物</td>
+                    <td>稻瘟病、水稻纹枯病、小麦条锈病、小麦赤霉病、玉米螟、玉米大斑病、大豆蚜</td>
+                    <td>名称、别名、分类、作物、症状、发生规律、传播途径、防治方法</td>
+                </tr>
+                <tr>
+                    <td>经济作物</td>
+                    <td>棉铃虫、棉花黄萎病、油菜菌核病、甘薯小象甲</td>
+                    <td>农业防治、化学防治、生物防治、预防建议</td>
+                </tr>
+                <tr>
+                    <td>蔬菜作物</td>
+                    <td>菜青虫、番茄晚疫病、黄瓜霜霉病、辣椒炭疽病</td>
+                    <td>症状描述、用药建议、棚室管理、发病条件</td>
+                </tr>
+                <tr>
+                    <td>果树作物</td>
+                    <td>苹果轮纹病、梨木虱、桃褐腐病、柑橘红蜘蛛</td>
+                    <td>枝叶果症状、清园措施、药剂轮换、天敌保护</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>六、接口说明</h2>
+                <p class="section-lead">后端 API 简洁，前端和测试都通过这些接口访问系统能力。</p>
+            </div>
+        </div>
+        <div class="grid-2">
+            <article class="endpoint">
+                <h3><span class="method">POST</span><code>/api/chat</code></h3>
+                <p>提交问题，返回答案、意图、置信度、来源和追问建议。</p>
+            </article>
+            <article class="endpoint">
+                <h3><span class="method">GET</span><code>/api/history</code></h3>
+                <p>根据 sessionId 获取当前会话的问答历史。</p>
+            </article>
+            <article class="endpoint">
+                <h3><span class="method">DELETE</span><code>/api/history</code></h3>
+                <p>清空指定 sessionId 的历史记录。</p>
+            </article>
+            <article class="endpoint">
+                <h3><span class="method">GET</span><code>/api/knowledge</code></h3>
+                <p>获取知识库概要，用于前端左侧知识列表。</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>七、典型问答效果</h2>
+                <p class="section-lead">系统能根据症状命中知识库条目，并给出可追溯的防治建议。</p>
+            </div>
+        </div>
+        <div class="demo-box">
+            <pre>用户问题：
+水稻叶片有梭形灰白病斑，穗颈发黑，可能是什么病？
+
+系统回答摘要：
+根据你描述的症状，优先怀疑是稻瘟病。
+
+判断依据：
+叶片出现梭形或纺锤形病斑，中央灰白、边缘褐色；穗颈发黑易折，严重时形成白穗。
+
+防治方案：
+1. 农业防治：选用抗病品种，合理密植，控制氮肥、增施磷钾肥。
+2. 化学防治：发病初期可用三环唑、稻瘟灵、春雷霉素等按标签剂量喷雾。
+3. 生物防治：可使用枯草芽孢杆菌、春雷霉素等生物源制剂辅助防控。
+
+来源：
+稻瘟病 · 粮食作物 · 匹配分 14.3</pre>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <div>
+                <h2>八、运行与验证</h2>
+                <p class="section-lead">项目已经完成 Maven 编译、JUnit 测试和 Jar 打包，可直接启动访问。</p>
+            </div>
+        </div>
+        <div class="run-box">
+            <div>
+                <p class="path">项目目录：<code>C:\Users\weng\Desktop\OHCP</code></p>
+                <p>启动命令：</p>
+                <p><code>java -jar target\agro-pest-qa-1.0.0.jar 8080</code></p>
+            </div>
+            <div>
+                <p>访问地址：</p>
+                <p><code>http://localhost:8080</code></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section highlight">
+        <div class="section-head">
+            <div>
+                <h2>九、答辩亮点</h2>
+                <p class="section-lead">讲解时可以重点强调这些内容，能对应赛题评分点。</p>
+            </div>
+        </div>
+        <div class="grid-4">
+            <article class="card">
+                <h3>知识库完整</h3>
+                <p>覆盖 PDF 要求的作物类别，并包含症状、规律、传播、防治、预防等字段。</p>
+            </article>
+            <article class="card">
+                <h3>检索可解释</h3>
+                <p>每次回答展示来源、匹配分和摘要，避免答案不可追溯。</p>
+            </article>
+            <article class="card">
+                <h3>系统可运行</h3>
+                <p>Java 21 + Maven 打包为 Jar，浏览器即可访问问答界面。</p>
+            </article>
+            <article class="card">
+                <h3>可扩展性好</h3>
+                <p>后续可替换为向量数据库、大模型 API 或更大规模农业知识库。</p>
+            </article>
+        </div>
+    </section>
+
+    <footer class="footer">
+        农业病虫害智能问答助手 · 项目讲解 HTML · 可直接用浏览器打开展示
+    </footer>
+</div>
+</body>
+</html>

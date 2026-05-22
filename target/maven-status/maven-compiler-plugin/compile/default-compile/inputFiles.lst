@@ -1,0 +1,13 @@
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\AgroQaApplication.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\api\AgroQaServer.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\domain\ChatMessage.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\domain\KnowledgeSource.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\domain\PestKnowledge.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\domain\QaResponse.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\domain\SearchHit.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\repository\PestKnowledgeRepository.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\service\ChatHistoryService.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\service\KnowledgeSearchService.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\service\PestQaService.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\service\QuestionAnalyzer.java
+C:\Users\weng\Desktop\OHCP\src\main\java\com\ohcp\agroqa\util\JsonUtil.java
